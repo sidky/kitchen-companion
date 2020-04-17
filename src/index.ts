@@ -1,4 +1,5 @@
 import express from "express"
+import {logger} from "./common/logger";
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -13,6 +14,6 @@ app.use("/list", shoppingList);
 
 app.listen(port, () => {
     // tslint:disable-next-line:no-console
-    console.log(`server started at http://localhost:${port}`);
+    logger.log('info', `server started at http://localhost:${port}`);
 });
 
