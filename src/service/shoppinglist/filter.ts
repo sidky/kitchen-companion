@@ -1,5 +1,5 @@
-import {ShoppingItemState} from "./state";
+import {ItemFulfilmentState} from "../../model/fulfilmentstate";
 
 export class ShoppingListFilter {
-    itemStates: ShoppingItemState
+    itemStates: ItemFulfilmentState[]
 }

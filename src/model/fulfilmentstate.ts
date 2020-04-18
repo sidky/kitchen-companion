@@ -1,4 +1,4 @@
-export enum ShoppingItemState {
+export enum ItemFulfilmentState {
     Active,
     Processing,
     Processed
