@@ -45,6 +45,28 @@ export class KitchenService {
         return applyToAll(res.rows, KitchenService.rowToKitchenItem);
     }
 
+    async addItems(items: KitchenItem[]): Promise<KitchenItem[]> {
+        let fmt = "";
+        let index = 1;
+        const params = [];
+
+        for (const item of items) {
+            if (fmt.length !== 0) {
+                fmt += ", ";
+            }
+            fmt += `(\$${index}, \$${index+1})`;
+            index += 2;
+            params.push(item.itemName, item.itemTypeId);
+        }
+
+        const res = await pool.query(
+            `INSERT INTO kitchen_item(item_name, item_type) VALUES ${fmt}
+                RETURNING id, item_name, item_type`,
+            params);
+
+        return applyToAll(res.rows, KitchenService.rowToKitchenItem);
+    }
+
     async itemTypes(): Promise<KitchenItemType[]> {
         const res = await pool.query(`SELECT id, type_name FROM kitchen_item_types`);
         return applyToAll(res.rows, KitchenService.rowToKitchenItemType);
@@ -59,10 +81,13 @@ export class KitchenService {
             if (fmt.length > 0) {
                 fmt += ", ";
             }
-            fmt += `\$${index++}`;
+            fmt += `(\$${index++})`;
             params.push(type.typeName);
         }
-        const res = await pool.query(`INSERT INTO kitchen_item_types VALUES ${fmt}`, params)
+        const res = await pool.query(`INSERT INTO kitchen_item_types(type_name)
+                        VALUES ${fmt}
+                        RETURNING id, type_name`,
+            params)
         return applyToAll(res.rows, KitchenService.rowToKitchenItemType)
     }
 
